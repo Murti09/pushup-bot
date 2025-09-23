@@ -44,6 +44,9 @@ def delete_pushups(user_id, count):
     c = conn.cursor()
     c.execute("UPDATE pushups SET total = total - ? WHERE user_id = ?", (count, user_id))
     c.execute("DELETE FROM pushups WHERE user_id = ? AND total <= 0", (user_id,))
+    c.execute("SELECT total FROM pushups WHERE user_id = ?", (user_id,))
+    row = c.fetchone()
     conn.commit()
     conn.close()
     print("delete_pushups wurde aufgerufen")
+    return row[0] if row else 0

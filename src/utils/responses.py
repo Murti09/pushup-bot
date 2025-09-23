@@ -29,7 +29,7 @@ async def handle_response(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     print(f"{username} ({user_id}) in {group_name}: {text}")
     
-    if update.effective_chat.id != GROUP_CHAT_ID and update.effective_chat.id != TEST_USER_ID:
+    if update.effective_chat.id not in [GROUP_CHAT_ID, TEST_USER_ID]:
         await update.message.reply_text("Du bist kein Teilnehmer!")
         return
 

@@ -7,11 +7,11 @@ from config import GROUP_CHAT_ID, TEST_USER_ID
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text('Hallo, ich bin Mr. PushUp! Schreibe mir deine Liegestütze')
 
-async def delete_pushups_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def delete_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     username = update.effective_user.first_name
 
-    if update.effective_chat.id != GROUP_CHAT_ID and update.effective_chat.id != TEST_USER_ID:
+    if update.effective_chat.id not in [GROUP_CHAT_ID, TEST_USER_ID]:
         await update.message.reply_text("Du bist kein Teilnehmer!")
         return
     
@@ -20,8 +20,9 @@ async def delete_pushups_command(update: Update, context: ContextTypes.DEFAULT_T
         return
     
     count = int(context.args[0])
-    delete_pushups(user_id, count)
-    await update.message.reply_text(f"{count} Liegestütze für {username} gelöscht.")
+    new_total = delete_pushups(user_id, count)
+    await update.message.reply_text(f"{count} Liegestütze für {username} gelöscht.\n"
+                                    f"Aktueller Stand: {new_total}")
 
-async def show_rank_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def rank_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await show_rank(update, context)
