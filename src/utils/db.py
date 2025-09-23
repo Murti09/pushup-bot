@@ -29,6 +29,7 @@ def add_pushups(user_id, username, count):
     conn.commit()
     conn.close()
     print("add_pushups wurde aufgerufen")
+    return new_total
 
 def get_all_pushups():
     conn = sqlite3.connect(DB_FILE)
