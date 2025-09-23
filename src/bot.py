@@ -1,5 +1,5 @@
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
-from handlers.commands import start_command, delete_pushups_command
+from handlers.commands import start_command, delete_pushups_command, show_rank_command
 from utils.responses import handle_response
 from dotenv import load_dotenv
 import os
@@ -12,6 +12,7 @@ def main():
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler('start', start_command))
     app.add_handler(CommandHandler('delete', delete_pushups_command))
+    app.add_handler(CommandHandler('rank', show_rank_command))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_response))
     app.run_polling()
 

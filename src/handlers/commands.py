@@ -1,6 +1,7 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 from utils.db import delete_pushups
+from utils.responses import show_rank
 from config import GROUP_CHAT_ID, TEST_USER_ID
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -21,3 +22,6 @@ async def delete_pushups_command(update: Update, context: ContextTypes.DEFAULT_T
     count = int(context.args[0])
     delete_pushups(user_id, count)
     await update.message.reply_text(f"{count} Liegestütze für {username} gelöscht.")
+
+async def show_rank_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await show_rank(update, context)

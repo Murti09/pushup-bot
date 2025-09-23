@@ -46,3 +46,4 @@ def delete_pushups(user_id, count):
     c.execute("DELETE FROM pushups WHERE user_id = ? AND total <= 0", (user_id,))
     conn.commit()
     conn.close()
+    print("delete_pushups wurde aufgerufen")

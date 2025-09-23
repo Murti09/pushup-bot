@@ -5,6 +5,20 @@ from config import GROUP_CHAT_ID, TEST_USER_ID
 
 init_db() # Datenbank beim Start initialisieren
 
+async def build_rank_message() -> str:
+    all_pushups = get_all_pushups()
+    msg = "Aktueller Stand:\n"
+    for i, (name, total) in enumerate(all_pushups):
+        if i == 0:
+            msg += f"{i+1}. 🏆{name}: {total}\n"
+        else:
+            msg += f"{i+1}. {name}: {total}\n"
+    return msg
+
+async def show_rank(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    msg = await build_rank_message()
+    await update.message.reply_text(msg)
+
 async def handle_response(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     username = update.effective_user.first_name
@@ -33,13 +47,4 @@ async def handle_response(update: Update, context: ContextTypes.DEFAULT_TYPE):
     count = int(text)
     add_pushups(user_id, username, count)
 
-    # Übersicht aller Teilnehmer
-    all_pushups = get_all_pushups()
-    msg = "Aktueller Stand:\n"
-    for i, (name, total) in enumerate(all_pushups):
-        if i == 0:
-            msg += f"{i+1}. 🏆{name}: {total}\n"
-        else:
-            msg += f"{i+1}. {name}: {total}\n"
-
-    await update.message.reply_text(msg)
+    await show_rank(update, context)
