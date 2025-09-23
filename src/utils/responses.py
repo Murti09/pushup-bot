@@ -1,10 +1,9 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 from utils.db import init_db, add_pushups, get_all_pushups
+from config import GROUP_CHAT_ID, TEST_USER_ID
 
 init_db() # Datenbank beim Start initialisieren
-
-GRUOP_CHAT_ID = -4765519001 # Gruppen-ID
 
 async def handle_response(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
@@ -16,8 +15,8 @@ async def handle_response(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     print(f"{username} ({user_id}) in {group_name}: {text}")
     
-    if update.effective_chat.id != GRUOP_CHAT_ID:
-        await update.message.reply_text("Du bist kein Teilnhemer!")
+    if update.effective_chat.id != GROUP_CHAT_ID and update.effective_chat.id != TEST_USER_ID:
+        await update.message.reply_text("Du bist kein Teilnehmer!")
         return
 
     if not text.isdigit():

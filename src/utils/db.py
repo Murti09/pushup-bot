@@ -38,3 +38,11 @@ def get_all_pushups():
     conn.close()
     print("get_all_pushups wurde aufgerufen")
     return rows
+
+def delete_pushups(user_id, count):
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute("UPDATE pushups SET total = total - ? WHERE user_id = ?", (count, user_id))
+    c.execute("DELETE FROM pushups WHERE user_id = ? AND total <= 0", (user_id,))
+    conn.commit()
+    conn.close()
