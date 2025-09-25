@@ -1,21 +1,38 @@
 from telegram import Update
 from telegram.ext import ContextTypes
-from utils.db import init_db, add_pushups, get_all_pushups
+from utils.db import init_db, add_pushups, get_all_pushups, get_today_rank
 from config import GROUP_CHAT_ID, TEST_USER_ID
+from datetime import date
 
 init_db() # Datenbank beim Start initialisieren
 
 async def build_rank_message() -> str:
-    all_pushups = get_all_pushups()
-    msg = "Aktueller Stand:\n"
-    for i, (name, total) in enumerate(all_pushups):
-        if i == 0:
-            msg += f"{i+1}. 🏆{name}: {total}\n"
+    msg = "📊 Push-Up Ranking\n\n"
+
+    # Heutige Ergebnisse
+    today_results = get_today_rank()
+    msg += f"📅 Heute ({date.today().isoformat()}):\n"
+    if today_results:
+        for i, (name, total) in enumerate(today_results, start=1):
+            msg += f"{i}. {name}: {total}\n"
+    else:
+        msg += "Noch keine Einträge heute.\n"
+
+    msg += "\n🏆 Gesamter Stand:\n"
+    total_results = get_all_pushups()
+    for i, (name, total) in enumerate(total_results, start=1):
+        if i == 1:
+            msg += f"{i}. 🥇 {name}: {total}\n"
+        elif i == 2:
+            msg += f"{i}. 🥈 {name}: {total}\n"
+        elif i == 3:
+            msg += f"{i}. 🥉 {name}: {total}\n"
         else:
-            msg += f"{i+1}. {name}: {total}\n"
+            msg += f"{i}. {name}: {total}\n"
+
     return msg
 
-async def show_rank(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def show_rank(update: Update, context: ContextTypes.DEFAULT_TYPE):    
     msg = await build_rank_message()
     await update.message.reply_text(msg)
 
