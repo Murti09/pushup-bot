@@ -11,30 +11,37 @@ async def build_rank_message() -> str:
 
     # Heutige Ergebnisse
     today_results = get_today_rank()
-    msg += f"📅 Heute ({date.today().isoformat()}):\n"
+    msg += f"📅 Heute:\n"
     if today_results:
         for i, (name, total) in enumerate(today_results, start=1):
-            msg += f"{i}. {name}: {total}\n"
+            if i == 1:
+                msg += f"🥇 {name}: <b>{total}</b>\n"
+            elif i == 2:
+                msg += f"🥈 {name}: <b>{total}</b>\n"
+            elif i == 3:
+                msg += f"🥉 {name}: <b>{total}</b>\n"
+            else:
+                msg += f"{name}: {total}\n"
     else:
         msg += "Noch keine Einträge heute.\n"
 
-    msg += "\n🏆 Gesamter Stand:\n"
+    msg += "\n🏆 Gesamt:\n"
     total_results = get_all_pushups()
     for i, (name, total) in enumerate(total_results, start=1):
         if i == 1:
-            msg += f"{i}. 🥇 {name}: {total}\n"
+            msg += f"🥇 {name}: <b>{total}</b>\n"
         elif i == 2:
-            msg += f"{i}. 🥈 {name}: {total}\n"
+            msg += f"🥈 {name}: <b>{total}</b>\n"
         elif i == 3:
-            msg += f"{i}. 🥉 {name}: {total}\n"
+            msg += f"🥉 {name}: <b>{total}</b>\n"
         else:
-            msg += f"{i}. {name}: {total}\n"
+            msg += f"{name}: {total}\n"
 
     return msg
 
 async def show_rank(update: Update, context: ContextTypes.DEFAULT_TYPE):    
     msg = await build_rank_message()
-    await update.message.reply_text(msg)
+    await update.message.reply_text(msg, parse_mode="HTML")
 
 async def handle_response(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
