@@ -32,3 +32,6 @@ async def undo_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     undo_last_pushups(user_id)
     await show_rank(update, context)
+
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("/start - Begrüßung\n/rank - Gibt die Rangliste aus\n/add <Anzahl> - Fügt Liegestützen hinzu (Nur die Zahl schreiben geht auch)\n/undo - Entfernt die zuletzt hinzugefügten Liegestützen")

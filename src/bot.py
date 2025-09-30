@@ -1,5 +1,5 @@
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
-from handlers.commands import start_command, rank_command, add_command, undo_command
+from handlers.commands import start_command, rank_command, add_command, undo_command, help_command
 from utils.responses import handle_response
 from dotenv import load_dotenv
 import os
@@ -14,6 +14,7 @@ def main():
     app.add_handler(CommandHandler('rank', rank_command))
     app.add_handler(CommandHandler('add', add_command))
     app.add_handler(CommandHandler('undo', undo_command))
+    app.add_handler(CommandHandler('help', help_command))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_response))
     app.run_polling()
 

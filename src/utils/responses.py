@@ -27,15 +27,18 @@ async def build_rank_message() -> str:
 
     msg += "\n🏆 Gesamt:\n"
     total_results = get_all_pushups()
-    for i, (name, total) in enumerate(total_results, start=1):
-        if i == 1:
-            msg += f"🥇 {name}: <b>{total}</b>\n"
-        elif i == 2:
-            msg += f"🥈 {name}: <b>{total}</b>\n"
-        elif i == 3:
-            msg += f"🥉 {name}: <b>{total}</b>\n"
-        else:
-            msg += f"{name}: {total}\n"
+    if total_results:
+        for i, (name, total) in enumerate(total_results, start=1):
+            if i == 1:
+                msg += f"🥇 {name}: <b>{total}</b>\n"
+            elif i == 2:
+                msg += f"🥈 {name}: <b>{total}</b>\n"
+            elif i == 3:
+                msg += f"🥉 {name}: <b>{total}</b>\n"
+            else:
+                msg += f"{name}: {total}\n"
+    else:
+        msg += "Noch keine Einträge"
 
     return msg
 

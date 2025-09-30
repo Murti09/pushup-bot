@@ -20,7 +20,8 @@ def init_db():
               user_id INTEGER,
               username TEXT,
               count INTEGER,
-              date TEXT
+              date TEXT,
+              last_count INTEGER
         )
     """)
     conn.commit()
