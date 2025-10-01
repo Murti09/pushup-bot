@@ -1,5 +1,6 @@
 import sqlite3
-from datetime import date
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 DB_FILE = "pushups.db"
 
@@ -43,7 +44,7 @@ def add_pushups(user_id, username, count):
         c.execute("INSERT INTO pushups (user_id, username, total) VALUES (?, ?, ?)", (user_id, username, new_total))
 
     # Heutigen Log-Eintrag speichern
-    today = date.today().isoformat()
+    today = datetime.now(ZoneInfo("Europe/Berlin")).date().isoformat()
     c.execute("SELECT count FROM pushups_log WHERE user_id=? AND date=?", (user_id, today))
     row = c.fetchone()
     if row:
@@ -72,7 +73,7 @@ def delete_pushups(user_id, count):
     c.execute("UPDATE pushups SET total = total - ? WHERE user_id = ?", (count, user_id))
     c.execute("DELETE FROM pushups WHERE user_id = ? AND total <= 0", (user_id,))
     
-    today = date.today().isoformat()
+    today = datetime.now(ZoneInfo("Europe/Berlin")).date().isoformat()
     c.execute("SELECT count FROM pushups_log WHERE user_id=? AND date=?", (user_id, today))
     row = c.fetchone()
     if row:
@@ -89,7 +90,7 @@ def delete_pushups(user_id, count):
 def get_today_rank():
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
-    today = date.today().isoformat()
+    today = datetime.now(ZoneInfo("Europe/Berlin")).date().isoformat()
     c.execute("""
         SELECT username, SUM(count) as daily_total
         FROM pushups_log
@@ -105,7 +106,7 @@ def undo_last_pushups(user_id):
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
 
-    today = date.today().isoformat()
+    today = datetime.now(ZoneInfo("Europe/Berlin")).date().isoformat()
     #Letzten count holen
     c.execute("SELECT last_count FROM pushups_log WHERE user_id=? AND date=?", (user_id, today))
     row = c.fetchone()

@@ -2,7 +2,11 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters
 from handlers.commands import start_command, rank_command, add_command, undo_command, help_command
 from utils.responses import handle_response
 from dotenv import load_dotenv
+from datetime import datetime, date
+from zoneinfo import ZoneInfo
 import os
+
+BERLIN_TZ = ZoneInfo("Europe/Berlin")
 
 load_dotenv()
 
@@ -19,6 +23,7 @@ def main():
     app.run_polling()
 
 if __name__ == '__main__':
+    print("Akutelles Datum (Berlin): ", datetime.now(BERLIN_TZ))
     print("Bot startet...")
     main()
     print("Bot ist beendet.")
