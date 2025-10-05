@@ -2,9 +2,21 @@ from telegram import Update
 from telegram.ext import ContextTypes
 from utils.db import init_db, add_pushups, get_all_pushups, get_today_rank
 from config import GROUP_CHAT_ID, TEST_USER_ID
-from datetime import date
+from datetime import date, datetime
 
 init_db() # Datenbank beim Start initialisieren
+
+CHALLENGE_START = datetime(2025, 10, 1, 0, 0)
+
+def get_challenge_duration():
+    now = datetime.now()
+    delta = now - CHALLENGE_START
+
+    days = delta.days
+    hours, remainder = divmod(delta.seconds, 3600)
+    minutes, _ = divmod(remainder, 60)
+
+    return days, hours, minutes
 
 async def build_rank_message() -> str:
     msg = "📊 Push-Up Ranking\n\n"
@@ -39,6 +51,9 @@ async def build_rank_message() -> str:
                 msg += f"{name}: {total}\n"
     else:
         msg += "Noch keine Einträge"
+
+    days, hours, minutes = get_challenge_duration()
+    msg += f"\n⏱ Challenge läuft seit {days} Tagen, {hours} Stunden und {minutes} Minuten!"
 
     return msg
 
